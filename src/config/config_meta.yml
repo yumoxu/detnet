@@ -1,0 +1,20 @@
+---
+lang: 'en'  # en, zh
+n_ways: 7
+
+# our systems: detnet1, detnet2, detnet
+# comparison systems: hiernet, milnet
+model_name: 'detnet'
+
+# eval: train, test_doc, test_sent_syn, test_sent_mturk, test_word_mturk, top_words
+mode: 'train'
+
+use_checkpoints: True
+
+debug: False
+
+device: [0, 1, 2, 3]  # [0, 1, 2, 3]
+auto_parallel: True
+
+target_dom: 'SPO'  # 体育
+target_lv: 'subsubtopic'

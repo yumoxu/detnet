@@ -1,0 +1,40 @@
+---
+variation: 'DetNet1'
+n_epochs: 40
+n_batches: 10000
+
+max_n_sents: 100   # 100*, 50
+max_n_words: 40  # 15*, 30, try: 70
+batch_size: 16  # 16, 32, 64*, 128, 200
+lr: 0.001  # 0.00001, 0.0001, 0.0005, 0.001*, 0.005, 0.01
+weight_decay: 0.0001  # 0.00001, 0.00001, 0.0001*
+
+ps: '40_words'
+
+opt: 'adam'  # sgd, adam
+grad_clip: 2  # 15.0
+
+dropout: 0.1  # 0.1, 0.3, 0.5
+gate: 'dynamic' # rand_scala, rand_vec, dynamic
+
+ins_attn: 'multi'  # 'key', 'single', 'multi'
+score_func: 'tanh'  # tanh, sigmoid, softmax
+activate_func: 'relu'  # tanh, relu, elu
+bn: 'after'  # after, doc-only, no-doc, after-with-doc-score-func
+n_layers: 3  # 6, 4, 3
+n_heads: 4   # 8, 6, 4
+d_embed: 256  # 512, 256
+d_model: 256  # 512, 256
+d_ff: 1024  # 2048, 1024
+
+desc_sent_org: 1
+
+n_doms: 7
+n_data_load_worker: 0
+
+decay_step: None # 100
+decay_rate: None  # 0.96
+momentum: None  # 0.9
+
+#word_embed_type: 'glove'  # rand, sswe or glove
+#weight_init: 'xavier-uniform'  # xavier-uniform, xavier-normal

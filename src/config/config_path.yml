@@ -1,0 +1,89 @@
+---
+wiki_url_pattern_en: 'https://en.wikipedia.org/wiki/Category:{0}'
+wiki_url_pattern_zh: 'https://zh.wikipedia.org/wiki/Category:{0}'
+wiki_corpus: ''  # wiki dump root
+head: 'articles.lst'
+
+proj_root:
+  local: ''  # specify project root here
+  afs: ''  # specify remote project root here
+
+proj_paths:
+  data: 'data/'
+
+  # data - relation
+  relation: 'relation/'
+  domain_lv: 'dom/'
+  topic_lv: 'topic/'
+  subtopic_lv: 'subtopic/'
+  subsubtopic_lv: 'subsubtopic/'
+  subsubsubtopic_lv: 'subsubsubtopic/'
+
+  # data - doc
+  doc: 'doc/'
+  doc_dedu: 'doc_dedu/'
+  doc_mixed: 'doc_mixed_1M_removed/'
+  clean_stats: 'clean_stats.txt'
+  non_ge_ids: 'non_ge_ids.txt'
+
+  # dataset
+  dataset: 'dataset/'
+  bipartite: 'bipartite/'
+  unproc: 'unproc/'
+  whole: 'whole/'
+
+  train: 'train/'
+  dev: 'dev/'
+  test: 'test/'
+
+  # test_filtered and dom_sent_corpora are for synthesizing data
+  test_filtered: 'test_filtered/'
+  dom_sent_corpora: 'dom_sent_corpora/'
+  
+  syn_docs: 'syn_docs/'
+  test_human_eval: 'test_human_eval/'
+
+  mturk: 'mturk/'
+  zh_wiki: 'zh_wiki/'
+  annot_en_wiki: 'annotations_en_wiki.csv'
+  annot_zh_wiki: 'annotations_zh_wiki.csv'
+  annot_en_nyt: 'annotations_en_nyt.csv'
+  label_en_wiki: 'label_en_wiki.txt'
+  label_zh_wiki: 'label_zh_wiki.txt'
+  label_en_nyt: 'label_en_nyt.txt'
+  
+  sampled_label_en_wiki: 'sampled_label_en_wiki.txt'
+  sampled_label_zh_wiki: 'sampled_label_zh_wiki.txt'
+  sampled_label_en_nyt: 'sampled_label_en_nyt.txt'
+
+  en_nyt_csv: 'en_nyt_csv/'
+  en_wiki_csv: 'en_wiki_csv/'
+  zh_wiki_csv: 'zh_wiki_csv/'
+
+  debug: 'debug/'
+
+  side_des_unproc: 'side_des_unproc.txt'
+  side_des: 'side_des.txt'
+
+  # res
+  res: 'res/'
+  vocab_full: 'vocab_full'
+  vocab_threshold_3: 'vocab_threshold_3'
+  vocab_threshold_5: 'vocab_threshold_5'
+
+  # performances
+  performances: 'performances/'
+  sigf: 'sigf/'
+
+  log: 'log/'
+
+  # model
+  model: 'model/'
+
+  # predictions
+  pred: 'pred/'
+  mat: 'mat/'
+  syn: 'syn/'
+  mturk: 'mturk/'
+
+  top: 'top/'  # summary

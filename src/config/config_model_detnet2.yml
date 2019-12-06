@@ -1,0 +1,56 @@
+---
+variation: 'Detnet2'
+n_epochs: 40
+
+# en: 3600 (7), 3400 (8)
+# zh: 2400, 4200(bad) (7), TBC (8)
+
+# with attn sent embeds
+# en: 2600
+# zh: 2000
+# en-40: 6200
+# zh-40: 6600, 5600, 5400
+n_batches: 10000
+
+max_n_sents: 100 # 100, 50
+max_n_words: 40 # 15*, 30, try: 70
+
+# test, for-sent-eval, observation, for-sent-eval-max_n_sents[50]-max_n_words[30]
+# _gated_control[0.1]
+# attn_sent_embeds
+
+# en*, zh*: for-sent-eval_gated_control[0.1]_attn_sent_embeds
+# try: obs_40_words, eval_40_words, 40_words
+ps: '40_words'  # test, for-sent-eval, observation
+lr: 0.0001  # 0.00001, 0.0001, 0.001*, 0.005, 0.01
+weight_decay: 0.00001  # 0.00001, 0.00001, 0.0001*
+batch_size: 16  # 16, 32, 64*, 128, 200
+
+opt: 'adam'  # sgd, adam
+grad_clip: 2  # 15.0
+dropout: 0.1  # 0.1, 0.3, 0.5
+gate: 'dynamic' # rand_scala, rand_vec, dynamic
+
+ins_attn: 'multi'  # 'key', 'single', 'multi'
+score_func: 'tanh'  # tanh, sigmoid, softmax
+activate_func: 'relu'  # tanh, relu, elu
+bn: 'after'  # after, doc-only, no-doc, after-with-doc-score-func
+n_layers: 3  # 6, 4, 3
+n_heads: 4   # 8, 6, 4
+d_embed: 256  # 512, 256
+d_model: 256  # 512, 256
+d_ff: 1024  # 2048, 1024
+
+desc_sent_org: 1
+max_n_side_topics: 50  # 50
+max_n_words_in_topic: 5  # 4
+
+n_doms: 7
+n_data_load_worker: 0
+
+decay_step: None # 100
+decay_rate: None  # 0.96
+momentum: None  # 0.9
+
+#word_embed_type: 'glove'  # rand, sswe or glove
+#weight_init: 'xavier-uniform'  # xavier-uniform, xavier-normal

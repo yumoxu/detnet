@@ -1,0 +1,54 @@
+#s-GOV
+A government is the system or group of people governing an organized community, often a state. 
+In the case of its broad associative definition, government normally consists of legislature, executive, and judiciary. 
+Government is a means by which organizational policies are enforced, as well as a mechanism for determining policy. 
+Each government has a kind of constitution, a statement of its governing principles and philosophy. 
+Typically the philosophy chosen is some balance between the principle of individual freedom and the idea of absolute state authority (tyranny). 
+While all types of organizations have governance, the word government is often used more specifically to refer to the approximately 200 independent national governments on Earth, as well as subsidiary organizations. 
+Historically prevalent forms of government include monarchy, aristocracy, timocracy, oligarchy, democracy, theocracy and tyranny. 
+The main aspect of any philosophy of government is how political power is obtained, with the two main forms being electoral contest and hereditary succession.
+#e-GOV
+#s-LIF
+Lifestyle is the interests, opinions, behaviours, and behavioural orientations of an individual, group, or culture. 
+The term was introduced by Austrian psychologist Alfred Adler with the meaning of "a person's basic character as established early in childhood", for example in his 1929 book "The Case of Miss R.". 
+The broader sense of lifestyle as a "way or style of living" has been documented since 1961. 
+Lifestyle is a combination of determining intangible or tangible factors. 
+Tangible factors relate specifically to demographic variables, i.e. an individual's demographic profile, whereas intangible factors concern the psychological aspects of an individual such as personal values, preferences, and outlooks.
+A rural environment has different lifestyles compared to an urban metropolis. 
+Location is important even within an urban scope. 
+The nature of the neighborhood in which a person resides affects the set of lifestyles available to that person due to differences between various neighborhoods' degrees of affluence and proximity to natural and cultural environments. 
+For example, in areas within a close proximity to the sea, a surf culture or lifestyle can often be present.
+#e-LIF
+#s-BUS
+Business is the activity of making one's living or making money by producing or buying and selling goods or services.
+Simply put, it is any activity or enterprise entered into for profit. 
+It does not mean it is a company, a corporation, partnership, or have any such formal organization, but it can range from a street peddler to General Motors.
+The term is also often used colloquially (but not by lawyers or public officials) to refer to a company, but this article will not deal with that sense of the word.
+#e-BUS
+#s-LAW
+Law is a system of rules that are created and enforced through social or governmental institutions to regulate behavior.
+Law is a system that regulates and ensures that individuals or a community adhere to the will of the state. 
+State-enforced laws can be made by a collective legislature or by a single legislator, resulting in statutes, by the executive through decrees and regulations, or established by judges through precedent, normally in common law jurisdictions. 
+Private individuals can create legally binding contracts, including arbitration agreements that may elect to accept alternative arbitration to the normal court process. 
+The formation of laws themselves may be influenced by a constitution, written or tacit, and the rights encoded therein. The law shapes politics, economics, history and society in various ways and serves as a mediator of relations between people.
+#e-LAW
+#s-HEA
+Health is the ability of a biological system to acquire, convert, allocate, distribute, and utilize energy with maximum efficiency. 
+The World Health Organization (WHO) defined human health in a broader sense in its 1948 constitution as "a state of complete physical, mental and social well-being and not merely the absence of disease or infirmity."
+This definition has been subject to controversy, in particular as lacking operational value, the ambiguity in developing cohesive health strategies and because of the problem created by use of the word "complete", which makes it practically impossible to achieve.
+Other definitions have been proposed, among which a recent definition that correlates health and personal satisfaction.
+#e-HEA
+#s-MIL
+A military is a force authorized to use lethal or deadly force and weapons to support the interests of the state and some or all of its citizens. 
+It typically consists of an Army, Navy, Air Force, and in certain countries the Marines and Coast Guard. 
+The task of the military is usually defined as defence of the state, and its citizens, and the prosecution of war against another state. 
+The military may also have additional sanctioned and non-sanctioned functions within a society, including, the promotion of a political agenda, protecting corporate economic interests, internal population control, construction, emergency services, social ceremonies, and guarding important areas. 
+The military may also function as a discrete subculture within a larger civil society, through the development of separate infrastructures, which may include housing, schools, utilities, logistics, health and medical, law, food production, finance and banking. 
+In broad usage, the terms "armed forces" and "military" are often treated as synonymous, although in technical usage a distinction is sometimes made in which a country's armed forces may include both its military and other paramilitary forces. 
+Armed force is the use of armed forces to achieve political objectives. 
+There are various forms of irregular military forces, not belonging to a recognized state; though they share many attributes with regular military forces, they are less often referred to as simply "military".
+#e-MIL
+#s-GEN
+Plain English (or layman's terms) is language that is easy to understand, emphasizes clarity and brevity, and avoids overly complex vocabulary. 
+Additionally, it is free of clichés and needless technical jargon and should be appropriate to the audience's developmental or educational level and their familiarity with the topic. 
+#e-GEN
