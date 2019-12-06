@@ -61,4 +61,6 @@ conda install --name myenv --file spec-file.txt
 
 You can download our datasets for both English and Chinese via [Google Drive](https://drive.google.com/drive/folders/1K5TdwoezGzzb19_2QjTuNipOX9kf1tUY?usp=sharing).
 
-After uncompressing *.zip files, put them under `dataset/en` or `dataset/zh`, respectively.
+After uncompressing *.zip files, put them under `dataset/en` or `dataset/zh`, respectively. These include data for model training, development and test. Note that `test` is for document-level test, and `syn_docs`is for sentence-level test with synthesized contexts (check the algorithm proposed in our paper for details).
+
+ `*.json` files include documents sampled from Wikipedia (in both `en` and `zh`) and NYT (in `en`); these documents are manually labeled via MTurk at both sentence-level and word-level for test purpose.
