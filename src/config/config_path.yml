@@ -43,6 +43,8 @@ proj_paths:
   syn_docs: 'syn_docs/'
   test_human_eval: 'test_human_eval/'
 
+  label_consistency_assumption: 'label_consistency_assumption/'
+
   mturk: 'mturk/'
   zh_wiki: 'zh_wiki/'
   annot_en_wiki: 'annotations_en_wiki.csv'

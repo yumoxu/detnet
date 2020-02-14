@@ -94,7 +94,6 @@ class PathParser:
         self.dataset_dev = join(self.dataset, self.proj_paths['dev'])
         self.dataset_test = join(self.dataset, self.proj_paths['test'])
 
-        self.dataset_test_sents = join(self.dataset, self.proj_paths['test_sents'])
         self.dataset_test_filtered = join(self.dataset, self.proj_paths['test_filtered'])
         self.dataset_dom_sent_corpora = join(self.dataset, self.proj_paths['dom_sent_corpora'])
         self.dataset_syn_docs = join(self.dataset, self.proj_paths['syn_docs'])

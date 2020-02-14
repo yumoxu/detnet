@@ -42,7 +42,6 @@ class DatasetBuilder:
         self.dp_dataset_dev = path_parser.dataset_dev
         self.dp_dataset_test = path_parser.dataset_test
 
-        self.dp_dataset_test_sents = path_parser.dataset_test_sents
         self.dp_dataset_test_filtered = path_parser.dataset_test_filtered
         self.dp_dataset_dom_sent_corpora = path_parser.dataset_dom_sent_corpora
         self.dp_dataset_syn_docs = path_parser.dataset_syn_docs
