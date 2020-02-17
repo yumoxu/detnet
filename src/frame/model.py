@@ -279,7 +279,6 @@ class MILNet(ModelBase):
     use_sent_mil = False
     use_doc_mil = True
     use_des = False
-    use_top = False
 
     ws_attn = False
     sd_attn = 'key'
@@ -322,32 +321,11 @@ class MILNet(ModelBase):
         return loss, doc_scores, sent_scores
 
 
-def make_prior(use_des, use_top):
-    """
-    :param model: could be model class or model instance.
-    :return: prior required for the input model type.
-    """
-    if not (use_des or use_top):
-        return None
-
-    return pipe.PriorLoader(transform=pipe.ToTensor()).load_prior(use_des=use_des, use_top=use_top)
-
-
 def make_loss_layer(score_func):
     if score_func == 'tanh':
         return nn.SoftMarginLoss()
     else:
         return nn.MultiLabelSoftMarginLoss()
-
-    # class SoftmaxLossLayer(nn.Module):
-    #     def __init__(self):
-    #         super(SoftmaxLossLayer, self).__init__()
-    #         self.nll = nn.NLLLoss()
-    #
-    #     def forward(self, doc_scores, target):
-    #         return self.nll(torch.log(doc_scores + 1e-7), target)
-    #
-    # return SoftmaxLossLayer()
 
 
 def make_opt(model):
@@ -369,7 +347,7 @@ def make_detnet_model(vocab_size, use_sent_embed_attn, use_gate_bn=True):
     dropout = config_model['dropout']
 
     model_cls = globals()[config_model['variation']]
-    use_des, use_top = model_cls.use_des, model_cls.use_top
+    use_des = model_cls.use_des
     use_sent_mil, use_doc_mil = model_cls.use_sent_mil, model_cls.use_doc_mil
 
     c = copy.deepcopy
@@ -425,7 +403,10 @@ def make_detnet_model(vocab_size, use_sent_embed_attn, use_gate_bn=True):
         'loss_layer': loss_layer,
     }
 
-    side_info = make_prior(use_des, use_top)
+    if use_des:
+        side_info = pipe.PriorLoader(transform=pipe.ToTensor()).load_prior()
+    else:
+        side_info = None
 
     basic_det_paras = {
         'd_embed': d_embed,
@@ -436,9 +417,8 @@ def make_detnet_model(vocab_size, use_sent_embed_attn, use_gate_bn=True):
     }
 
     if use_sent_mil:
-        side_des = c(side_info) if use_des else None
         word_det_paras = {**basic_det_paras,
-                          'side_info': side_des,
+                          'side_info': side_info,
                           'gate': config_model['gate'],
                           'embed_layer': embed_layer,
                           'word_enc': word_enc,
@@ -448,9 +428,7 @@ def make_detnet_model(vocab_size, use_sent_embed_attn, use_gate_bn=True):
         model_components['word_det'] = WordDomDetector(**word_det_paras)
 
     if use_doc_mil:
-        side_top = c(side_info) if use_top else None
         sent_det_para = {**basic_det_paras,
-                         'side_info': side_top,
                          'gate': config_model['gate'],
                          'embed_layer': embed_layer,
                          'use_mil': use_sent_mil,

@@ -7,14 +7,13 @@ from utils.config_loader import logger
 
 
 class Detector(nn.Module):
-    def __init__(self, d_embed, n_doms, score_func, dropout, activate_func=None, side_info=None, gate=None, embed_layer=None):
+    def __init__(self, d_embed, n_doms, score_func, dropout, activate_func=None, gate=None, embed_layer=None):
         super(Detector, self).__init__()
         self.d_embed = d_embed
         self.n_doms = n_doms
         self.score_func = score_func
         self.dropout = nn.Dropout(dropout)
         self.activate_func = activate_func
-        self.side_info = side_info
         self.gate = gate
         self.embed_layer = embed_layer
 
@@ -101,7 +100,8 @@ class WordDomDetector(Detector):
         (2) incorporate domain definition as side information (wait to be done).
     """
     def __init__(self, d_embed, n_doms, score_func, dropout, activate_func, side_info, gate, embed_layer, word_enc, sent_enc, use_gate_bn=None):
-        super(WordDomDetector, self).__init__(d_embed, n_doms, score_func, dropout, activate_func, side_info, gate, embed_layer)
+        super(WordDomDetector, self).__init__(d_embed, n_doms, score_func, dropout, activate_func, gate, embed_layer)
+        self.side_info = side_info
         self.W_z = nn.Linear(d_embed, n_doms)
         # uncomment when use bn
         self.sem_bn = nn.BatchNorm1d(n_doms)
@@ -225,8 +225,7 @@ class StefanosWordDomDetector(Detector):
         (2) incorporate domain definition as side information (wait to be done).
     """
     def __init__(self, d_embed, n_doms, score_func, dropout, activate_func, gate, embed_layer):
-        side_info = None
-        super(StefanosWordDomDetector, self).__init__(d_embed, n_doms, score_func, dropout, activate_func, side_info, gate, embed_layer)
+        super(StefanosWordDomDetector, self).__init__(d_embed, n_doms, score_func, dropout, activate_func, gate, embed_layer)
         self.W_z = nn.Linear(d_embed, n_doms)
         # uncomment when use bn
         self.sem_bn = nn.BatchNorm1d(n_doms)
@@ -248,38 +247,13 @@ class StefanosWordDomDetector(Detector):
 class SentDomDetector(Detector):
     """
         combine word_dists as instances with word-level self-attention.
-        incorporate domain topics as side information (wait to be done).
     """
-    def __init__(self, d_embed, n_doms, score_func, dropout, activate_func, side_info, gate, embed_layer, use_mil, use_gate_bn=None):
-        super(SentDomDetector, self).__init__(d_embed, n_doms, score_func, dropout, activate_func, side_info, gate, embed_layer)
+    def __init__(self, d_embed, n_doms, score_func, dropout, activate_func, gate, embed_layer, use_mil, use_gate_bn=None):
+        super(SentDomDetector, self).__init__(d_embed, n_doms, score_func, dropout, activate_func, gate, embed_layer)
         self.use_mil = use_mil
         # uncomment when use bn
         self.sem_bn = nn.BatchNorm1d(n_doms)
         self.W_h = nn.Linear(d_embed, n_doms)
-
-        if side_info:
-        # if 'topic_ids' in side_info and 'topic_mask' in side_info:
-            topic_ids = side_info['topic_ids']
-            topic_mask = side_info['topic_mask']
-
-            self.register_buffer('topic_ids', topic_ids)
-            self.register_buffer('topic_mask', topic_mask)
-
-            self.W_v = nn.Linear(d_embed, d_embed, bias=False)
-
-            # uncomment when use bn
-            self.side_inner_bn = nn.BatchNorm1d(d_embed)
-            self.side_outer_bn = nn.BatchNorm1d(n_doms)
-            self.bag_bn = nn.BatchNorm1d(n_doms)
-
-            self.side_gate_bn = nn.BatchNorm1d(n_doms) if use_gate_bn else None
-
-            if gate == 'dynamic':
-                self.W_g_p = nn.Linear(d_embed+n_doms*2, n_doms)
-            elif gate == 'rand_vec':
-                self.side_gate_in = nn.Parameter(torch.rand(n_doms))
-            else:
-                self.side_gate_in = nn.Parameter(torch.rand(1))
 
         if use_mil:
             # uncomment when use bn
@@ -294,68 +268,6 @@ class SentDomDetector(Detector):
                 self.upward_gate_in = nn.Parameter(torch.rand(n_doms))
             else:
                 self.upward_gate_in = nn.Parameter(torch.rand(1))
-
-    def _create_topic_embeds(self):
-        """
-            create topic embeds with topic word ids and masks.
-
-        :param topic_ids: 3d tensor, n_doms * n_topics * n_words
-        :param topic_mask: mat, n_doms * n_topics (just indicates #words in each topic).
-
-        :return: topic_embeds: 3d tensor, n_doms * n_topics * d_embed
-        """
-        # create topic embeds
-        topic_ids = Variable(self.topic_ids)
-        topic_mask = Variable(self.topic_mask)
-
-        topic_word_embeds = self._embeds_3d_id_tensors(topic_ids)  # n_doms * n_topics * n_words * d_embed
-
-        topic_embeds = torch.sum(topic_word_embeds, dim=-2)  # n_doms * n_topics * d_embed
-        # print('topic_embeds: {0}'.format(topic_embeds))
-
-        # print('topic_mask: {0}'.format(topic_mask))  # with some elements == 0
-        topic_mask[topic_mask == float(0)] = float(1)  # for div, do not matter by replacing 0 with 1
-        # print('topic_mask: {0}'.format(topic_mask))
-        topic_mask = topic_mask.unsqueeze(-1).expand_as(topic_embeds).float()  # n_doms * n_topics * d_embed
-        # topic_mask = torch.sqrt(topic_mask).unsqueeze(-1).expand_as(topic_embeds)  # n_doms * n_topics * d_embed
-        # topic_mask = topic_mask.unsqueeze(-1).repeat(1, 1, topic_embeds.size()[-1])  # n_doms * n_topics * d_embed
-
-        topic_embeds = topic_embeds / topic_mask
-        # topic_embeds[topic_embeds == float("Inf")] = 0.0
-        # print('topic_embeds: {0}'.format(topic_embeds))
-
-        return topic_embeds
-
-    def _compute_side_scores(self, sent_reps, topic_embeds):
-        """
-
-        :param sent_reps: d_batch * n_sents * d_embed
-        :param topic_embeds: n_dom * n_topics * d_embed
-        :return:
-        """
-        d_topic_attn_score = list(sent_reps.size()[:2])  # d_batch, n_sents
-        d_topic_attn_score.extend(topic_embeds.size()[:2])  # d_batch, n_sents, n_dom, n_topics
-
-        sent_reps = sent_reps.view(-1, self.d_embed)  # (d_batch * n_sents) * d_embed
-
-        sent_reps = self.activate(self.W_v(sent_reps))  # (d_batch * n_sents) * d_embed
-        sent_reps = self.side_inner_bn(sent_reps)  # (d_batch * n_sents) * d_embed
-
-        topic_embeds = torch.t(topic_embeds.view(-1, self.d_embed))  # d_embed * (n_dom * n_topics)
-        # print('Sent - topic_embeds: {0}'.format(topic_embeds))
-
-        # dbgk_topics = torch.t(F.tanh(self.W_v(dbgk_topics)).view(-1, self.d_embed))  # d_embed * (n_dom * n_topics)
-        topic_score_in = torch.matmul(sent_reps, topic_embeds)  # (d_batch * n_sents) * (n_dom * n_topics)
-        topic_score_in = topic_score_in.view(d_topic_attn_score)  # d_batch * n_sents * n_dom * n_topics
-        # print('Sent - topic_score_in: {0}'.format(topic_score_in))
-
-        topic_scores = self.get_scores(topic_score_in)  # d_batch * n_sents * n_dom * n_topics
-        # print('Sent - topic_scores: {0}'.format(topic_scores))
-
-        # max-pool
-        side_scores = torch.max(topic_scores, dim=-1)[0]  # d_batch * n_sents * n_dom
-
-        return side_scores
 
     def _compute_ins_scores(self, word_scores, word_attn):
         word_scores = word_scores.transpose(-2, -1).contiguous()  # d_batch * n_sents * n_dom * n_words
@@ -374,7 +286,6 @@ class SentDomDetector(Detector):
         :param word_scores: d_batch * n_sents * n_words * n_doms
         :param word_attn: # d_batch * n_sents * n_words
         :param sent_reps: d_batch * n_sents * d_embed, has been transposed.
-        :param topic_embeds: n_dom * n_topics * d_embed
 
         :return: sent_dists: d_batch * n_sents * n_doms
         """
@@ -389,39 +300,16 @@ class SentDomDetector(Detector):
                 'sem_scores': sem_scores
             }
 
-        if not self.side_info and not self.use_mil:
+        if not self.use_mil:
             res_dict['sent_scores'] = sem_scores
             return res_dict
-
-        if self.side_info:
-            # logger.info('Start: prior - topic')
-            topic_embeds = self._create_topic_embeds()  # n_doms * n_topics * d_embed
-            # logger.info('Done: topic_embeds: {0}'.format(topic_embeds.size()))
-
-            side_scores = self._compute_side_scores(sent_reps, topic_embeds)  # d_batch * n_sents * n_doms
-            # print(side_scores.size())
-            # uncomment when use bn
-            side_scores = self._bn(input=side_scores, bn=self.side_outer_bn, out_size=d_sent_scores)
-            # compose with side gate
-            dynamic_in = [sent_reps, sem_scores, side_scores]
-            # logger.info('Prior gate [SENTENCE]...')
-            bag_scores = self._gate_input_dynamically(dynamic_in, linear=self.W_g_p, bn=self.side_gate_bn)
-            # uncomment when use bn
-            bag_scores = self._bn(input=bag_scores, bn=self.bag_bn, out_size=d_sent_scores)
-
-            if not self.use_mil:
-                res_dict['sent_scores'] = bag_scores
-                return res_dict
 
         if self.use_mil:
             ins_scores = self._compute_ins_scores(word_scores, word_attn)
             # uncomment when use bn
             ins_scores = self._bn(input=ins_scores, bn=self.mil_bn, out_size=d_sent_scores)  # d_batch * n_sents * n_doms
             # compose with upward gate
-            if self.side_info:
-                dynamic_in = [sent_reps, bag_scores, ins_scores]
-            else:
-                dynamic_in = [sent_reps, sem_scores, ins_scores]
+            dynamic_in = [sent_reps, sem_scores, ins_scores]
 
             # logger.info('Upward gate ...')
             sent_scores = self._gate_input_dynamically(dynamic_in, linear=self.W_g, bn=self.upward_gate_bn)
@@ -438,8 +326,7 @@ class StefanosSentDomDetector(Detector):
         (optionally) combining word_scores as instances with word-level self-attention.
     """
     def __init__(self, d_embed, n_doms, score_func, dropout, activate_func, gate, embed_layer, use_mil, use_gate_bn=None):
-        side_info = None
-        super(StefanosSentDomDetector, self).__init__(d_embed, n_doms, score_func, dropout, activate_func, side_info, gate, embed_layer)
+        super(StefanosSentDomDetector, self).__init__(d_embed, n_doms, score_func, dropout, activate_func, gate, embed_layer)
         self.use_mil = use_mil
         # uncomment when use bn
         self.sem_bn = nn.BatchNorm1d(n_doms)
@@ -586,4 +473,3 @@ class DocDomDetectorWithReps(Detector):
         # logger.info('doc_scores: {0}'.format(doc_scores))
 
         return doc_scores
-''

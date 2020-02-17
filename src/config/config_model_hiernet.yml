@@ -27,8 +27,6 @@ d_model: 256  # 512, 256
 d_ff: 1024  # 2048, 1024
 
 desc_sent_org: 1
-max_n_side_topics: 50  # 50
-max_n_words_in_topic: 5  # 4
 
 n_doms: 7
 n_data_load_worker: 0
